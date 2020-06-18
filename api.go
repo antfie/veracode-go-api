@@ -9,6 +9,7 @@ import (
 	"github.com/antfie/veracode-go-hmac-authentication/hmac"
 )
 
+// Returns a list of applications.
 func GetApplicationList(apiKeyID, apiKeySecret string) (string, error) {
 	var apiUrl = "https://analysiscenter.veracode.com/api/5.0/getapplist.do"
 	return makeApiRequest(apiKeyID, apiKeySecret, apiUrl, http.MethodGet)
