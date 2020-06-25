@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/xml"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -9,24 +10,24 @@ import (
 	"github.com/antfie/veracode-go-hmac-authentication/hmac"
 )
 
-func makeApiRequest(apiKeyID, apiKeySecret, apiUrl, httpMethod string) (string, error) {
+func makeApiRequest(apiKeyID, apiKeySecret, apiUrl, httpMethod string, o interface{}) error {
 	parsedUrl, err := url.Parse(apiUrl)
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	client := &http.Client{}
 	req, err := http.NewRequest(httpMethod, parsedUrl.String(), nil)
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	authorizationHeader, err := hmac.CalculateAuthorizationHeader(parsedUrl, httpMethod, apiKeyID, apiKeySecret)
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	req.Header.Add("Authorization", authorizationHeader)
@@ -34,18 +35,18 @@ func makeApiRequest(apiKeyID, apiKeySecret, apiUrl, httpMethod string) (string, 
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("Expected status 200. Status was: " + resp.Status)
+		return errors.New("Expected status 200. Status was: " + resp.Status)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return string(body[:]), nil
+	return xml.Unmarshal(body[:], &o)
 }
