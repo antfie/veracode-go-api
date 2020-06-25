@@ -6,9 +6,27 @@ A Go version of the Veracode API.
 
 ## Running
 
-Configure your `apiKeyID` and `apiKeySecret` values and then run:
+Create a Go file with the following example contents:
 
+```go
+package main
+
+import (
+	api "github.com/antfie/veracode-go-api"
+)
+
+func main() {
+	var apiKeyID = "YOUR_VERACODE_API_KEY_ID"
+	var apiKeySecret = "YOUR_VERACODE_API_KEY_SECRET"
+
+	response, err := api.GetApplicationList(apiKeyID, apiKeySecret)
+
+	if err != nil {
+		panic(err)
+	}
+
+	print(response)
+}
 ```
-go build
-./veracode-go-api.exe
-```
+
+Configure your `apiKeyID` and `apiKeySecret` values and then run.
