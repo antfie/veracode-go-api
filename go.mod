@@ -1,4 +1,4 @@
-module antfie.com/veracode-go-api
+module github.com/antfie/veracode-go-api
 
 go 1.14
 
